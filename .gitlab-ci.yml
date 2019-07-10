@@ -1,0 +1,22 @@
+image: node
+
+deploy:
+  cache:
+    paths:
+    - node_modules/
+    - yarn.lock
+    - .cache/
+  script:
+  - rm -rf .temp
+  - mkdir .temp
+  - cp -r ./* .temp/
+  - cp ./.nojekyll .temp/.nojekyll
+  - rm -rf ./.temp/.git
+  - yarn --cache-folder ./.cache
+  - yarn global add gh-pages --cache-folder ./.cache
+  - git config --global user.email ${GITLAB_USER_EMAIL}
+  - git config --global user.name ${GITLAB_USER_NAME}-${GITLAB_USER_LOGIN}
+  # - gh-pages -d ./.temp -b gh-pages -m "${CI_COMMIT_MESSAGE}" -r https://wuyun1:wu950429@gitee.com/yunqiang_wu/frontend-train-201907-a-journal.git
+  - gh-pages -d ./.temp -b gh-pages -t -m "${CI_COMMIT_MESSAGE}" -r https://6fd344b28ad84df425cdede14b500452d87cba33@github.com/yunqiangwu/frontend-train-201907-a-journal.git # https://wuyun1:wu950429@gitee.com/yunqiang_wu/frontend-train-201907-a-journal.git
+  only:
+  - master
